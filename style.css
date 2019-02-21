@@ -1,0 +1,44 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+.card{
+    background: linear-gradient(40deg, #ff6ec4, #7873f5);
+    height:100%;
+    margin: 5em;
+}
+a{
+    color: cornsilk !important;
+}
+h1{ 
+    color: cornsilk !important;
+    font-style: italic;
+    font-size: 4em;
+    font-weight: 600 !important;
+}
+#author{
+    text-align: end;
+}
+.card-text{
+    height: 50px;
+    color: cornsilk !important;
+    font-size: 1.3em !important;
+    font-weight: 400 !important;
+    font-style: italic;
+    margin: 3em;
+}
+body{
+    font-family: 'Montserrat', sans-serif;
+    height: -webkit-fill-available;
+    text-align: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.card-body{
+    padding: 3em;
+}
+.container-fluid{
+    height:100%;
+    padding:0 !important;
+    margin:0 !important;
+}
