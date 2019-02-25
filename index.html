@@ -26,26 +26,26 @@
     </div>
     <script src="node_modules/jquery/dist/jquery.js"></script>
     <script>
-        $(document).ready(function(){
+        $(document).ready( () => {
 
-            $("button").click(function(){
-                let colors = ['#16a085', '#27ae60', '#2c3e50', '#f39c12', '#e74c3c', '#9b59b6', '#FB6964', '#342224', "#472E32", "#BDBB99", "#77B1A9", "#73A857"];
-                let colorLen = colors.length - 1; 
+            let colors = ['#16a085', '#27ae60', '#2c3e50', '#f39c12', '#e74c3c', '#9b59b6', '#FB6964', '#342224', "#472E32", "#BDBB99", "#77B1A9", "#73A857"];
+            let colorLen = colors.length - 1;
+            $("button").click( () => {
                 let randomIndex = Math.round(Math.random() * colorLen);
                 let color = colors[randomIndex];
-                let color2 = colors[randomIndex];
+                let color1 = colors[randomIndex];
                 $(".card").css("background", color);
-            
-                $.ajax({
+
+                $.ajax(obj = {
                     url: "https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json",
                     dataType: "json",
                     type: "get",
                     cache: false, 
-                    success: function(data) {
-                        var arr = data.quotes;
-                        var arrLen = arr.length - 1;
-                        var index = Math.round(Math.random() * arrLen);
-                        var obj = arr[index]; //array with objects
+                    success: (data) => {
+                        let arr = data.quotes;
+                        let arrLen = arr.length - 1;
+                        let index = Math.round(Math.random() * arrLen);
+                        let obj = arr[index]; //array with objects
                         $("#author").text(obj.author);
                         $("#quote").text(obj.quote);
                     }
