@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="node_modules/mdbootstrap/css/mdb.css">
+    <link rel="stylesheet" href ="style.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400i,600,600i,700,800i" rel="stylesheet">
+    <title>Project</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="card">
+            <div class="card-body">
+                <!-- Title -->
+                <h1 class="card-title w-100">QUOTES FOR EVERY DAY</h1>
+                <!-- Text -->
+                <span><p id="quote" class="card-text w-100">Grove Street. Home. At least it was before I fucked everything up ...</p></span>
+                <span><p id="author" class="card-text w-100">Carl Johnson</p></span>
+                <div>
+                    <button class="btn btn-info" type="button">
+                        ADD YOUR QUOTE
+                    </button>
+                </div>
+                <div class="md-form input collapse">
+                    <input id="typeAuthor" class="form-control w-100"  type="text" placeholder="Type your Name here...">
+                        <div class="md-form">
+                            <input type="text" id="typeQuote" placeholder="Type your Quote here..." class="w-100 form-control">
+                        </div>
+                    <button id="submit" class="w-100 btn btn-default">Submit</button>
+                </div>
+
+                <!-- Button -->
+                <button id="generate" class="btn btn-warning w-100"><a href="#">GENERATE NEW QUOTE</a></button>
+                <div></div>
+                    <ul id="addedQuotes">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script>
+            
+    class ColorGenerator {
+        constructor(colors) {
+            this.colors = colors;
+        }
+        generateColor() {
+            let backgroundColor;
+            let newColors = [];
+            for (let i = 0; i < this.colors.length - 1; i++) {
+                backgroundColor = $(".card").css("background-color");
+                if (backgroundColor !== this.colors[i]) {
+                    newColors.push(this.colors[i]);
+                }
+            }
+            let randomIndex = Math.ceil(Math.random() * newColors.length - 1);
+            let color = newColors[randomIndex];
+            return color;
+        }
+    }
+    class QuoteGenerator {
+        constructor(data) {
+            this.data = data;
+        }
+        genInfo() {
+            return this.data
+        }
+        addQuote(){
+            return this.data.push(quotes);
+        }
+        genRandomQuoteIndex(){
+            let randomIndex = Math.ceil(Math.random() * this.genInfo().length-1);
+            return randomIndex;
+        }
+        genRandomQuote() {
+            return this.data[this.genRandomQuoteIndex()];
+        }
+        genQuote() {
+            return this.genRandomQuote().quote;
+        }
+        genAuthor() {
+            return this.genRandomQuote().author;
+        }
+    }
+
+    let getColor;
+    let getQuote;
+    let quotes;
+
+    function addClickHandler() {
+            $("#generate").click(() => {
+                let quote = getQuote.genRandomQuote();
+                $(".card").css("background", getColor.generateColor());
+                $("#author").text(quote.author);
+                $("#quote").text(quote.quote);
+                $.ajax({
+                    url: "http://localhost:8888/reset",
+                    datatype: "json",
+                    type: "GET",
+                    data: quotes,
+                    cache: false,
+                    success: function(firstQuote){
+                        $("#addedQuotes").append(`<li>${firstQuote[firstQuote.length -1].author}: ${firstQuote[firstQuote.length -1].text}</li>`);
+                        console.log(`${firstQuote[firstQuote.length -1].author}: ${firstQuote[firstQuote.length -1].text}`); 
+                    },
+                    error: function(firstQuote){
+                        console.log("Ошибка", firstQuote);
+                    }
+                })
+            });
+
+        }
+         
+        $("#submit").click(function(){
+            quotes = {
+                author: $("#typeAuthor").val(),
+                text: $("#typeQuote").val()
+            }
+
+            $.ajax({
+                url: "http://localhost:8888/quotes",
+                datatype: "json",
+                type: "POST",
+                data: quotes,
+                cache: false,
+                success: function(newQuote){
+                    $("#addedQuotes").append(`<li>${newQuote[newQuote.length -1].author}: ${newQuote[newQuote.length -1].text}</li>`); 
+                },
+                error: function(newQuote){
+                    console.log("Ошибка", newQuote);
+                }
+            })
+            $.ajax({
+                url: "http://localhost:8888/quotes",
+                datatype: "json",
+                type: "GET",
+                data: quotes,
+                cache: false,
+                success: function(oldQuote){
+                   console.log(`${oldQuote[oldQuote.length -1].author}: ${oldQuote[oldQuote.length -1].text}`); 
+                },
+                error: function(oldQuote){
+                    console.log("Ошибка", oldQuote);
+                }
+            })
+
+            getQuote.addQuote();
+            $("#typeQuote").val(" ");
+            $("#typeAuthor").val(" ");
+            alert(`Complete`);
+        })
+
+$(".btn-info").click(
+    function(){
+    $(".collapse").toggle(
+  function() {
+    $(this).addClass(".active");
+  }, function() {
+    $(this).removeClass(".active");
+  });
+}) ;
+
+    $(document).ready(() => {
+        
+        $.ajax({
+            url: "https://gist.githubusercontent.com/camperbot/5a022b72e96c4c9585c32bf6a75f62d9/raw/e3c6895ce42069f0ee7e991229064f167fe8ccdc/quotes.json",
+            dataType: "json",
+            type: "GET",
+            cache: false,
+            success: (data) => {
+                getColor = new ColorGenerator(['rgb(22, 160, 133)', 'rgb(155, 89, 182)', 'rgb(44, 62, 80)', 'rgb(243, 156, 18)', 'rgb(231, 76, 60)', 'rgb(155, 89, 182)',
+                    'rgb(251, 105, 100)', 'rgb(52, 34, 36)', 'rgb(71, 46, 50)', 'rgb(189, 187, 153)', 'rgb(115, 168, 87)', 'rgb(119, 177, 169)']);
+                getQuote = new QuoteGenerator(data.quotes);
+                //getQuote = new QuoteGenerator([]);
+                addClickHandler();
+            }
+        })
+    });
+
+    </script>
+    <script src="node_modules/mdbootstrap/js/popper.min.js"></script>
+
+</body>
+</html>
